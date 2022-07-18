@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_shop/models/cart.dart';
 import 'package:new_shop/models/product_list.dart';
 import 'package:new_shop/pages/product_detail_page.dart';
 import 'package:new_shop/pages/products_overview_page.dart';
@@ -15,9 +16,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData();
-    return ChangeNotifierProvider(
-      //Aqui foi criado um changenotifier para productList
-      create: (_) => ProductList(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          //Aqui foi criado um changenotifier para productList
+          create: (_) => ProductList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
