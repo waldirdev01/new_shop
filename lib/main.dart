@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ThemeData();
     return ChangeNotifierProvider(
+      //Aqui foi criado um changenotifier para productList
       create: (_) => ProductList(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
