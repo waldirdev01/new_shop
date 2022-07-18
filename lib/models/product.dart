@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-class Product {
+//TODO 01: acrescentar changenotifier à classe e notifyListener() ao método
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -19,6 +19,6 @@ class Product {
 
   void toggleFavorite() {
     isFavorite = !isFavorite;
-
+    notifyListeners();
   }
 }
