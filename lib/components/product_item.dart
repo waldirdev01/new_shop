@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_shop/models/cart.dart';
 import 'package:provider/provider.dart';
 
 import '../models/product.dart';
@@ -18,6 +19,8 @@ class ProductItem extends StatelessWidget {
     // apenas os widgets filhos do consumer vão reagir. Poderia colocar o Consumer envolvendo o ClipRRect, mas
     // aí seria a mesma coisa de deixar o provider ouvindo as alterações.
     //TODO 04: usando o parâmetro listen: false e Widget Consumer.
+    //TODO 05: provider do cart
+    final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -42,7 +45,9 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product);
+            },
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).colorScheme.primary,
           ),
