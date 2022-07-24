@@ -47,7 +47,7 @@ class ProducGridtItem extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               cart.addItem(product);
-
+              ScaffoldMessenger.of(context).hideCurrentSnackBar(); //esconde o snackbar anterior
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Produto adicionado com sucesso!'),
