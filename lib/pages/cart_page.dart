@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_shop/models/cart.dart';
+import 'package:new_shop/models/order_list.dart';
 import 'package:provider/provider.dart';
 
 import '../components/cart_item.dart';
@@ -36,12 +37,14 @@ class CartPage extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   Chip(
-                    backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.2),
                     label: Text(
                       'R\$${cart.totalAmount}',
                       style: TextStyle(
-                        color:
-                            Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -53,7 +56,11 @@ class CartPage extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<OrderList>(context, listen: false)
+                          .addOrder(cart);
+                      cart.clear();
+                    },
                   ),
                 ],
               ),

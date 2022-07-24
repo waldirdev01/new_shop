@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_shop/components/app_drawer.dart';
 import 'package:new_shop/components/badge.dart';
 import 'package:new_shop/models/product_list.dart';
 import 'package:new_shop/utils/app_routes.dart';
@@ -53,16 +54,17 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             child: IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.CART);
-                }, icon: Icon(Icons.shopping_cart)),
+                },
+                icon: Icon(Icons.shopping_cart)),
             builder: (context, cart, childConsumer) {
               return Badge(
-                  value: cart.itemsCount.toString(),
-                  child: childConsumer!);
+                  value: cart.itemsCount.toString(), child: childConsumer!);
             },
           ),
         ],
       ),
       body: ProductGrid(showFavoriteOnly: _showFavoriteOnly),
+      drawer: AppDrawer(),
     );
   }
 }
