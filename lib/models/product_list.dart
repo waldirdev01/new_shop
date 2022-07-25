@@ -16,9 +16,10 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
-  void saveProduct(Map<String, Object> data) {
+ Future<void>saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
-
+//converti para Future<void> para poder utilizar o asssinconismo para o programa
+   //esperar enquanto salva ou atualiza um produto
     final product = Product(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
@@ -28,19 +29,21 @@ class ProductList with ChangeNotifier {
     );
 
     if (hasId) {
-      updateProduct(product);
+      return updateProduct(product);
     } else {
-      addProduct(product);
+     return addProduct(product);
     }
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       _items[index] = product;
       notifyListeners();
     }
+    return Future.value();
+    //provisório. Ainda não entendi para que serve
   }
 
   void removeProduct(Product product) {
@@ -55,7 +58,8 @@ class ProductList with ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
+    //converti para Future<void> para fazer o programa esperar enquanto adciona um produto
     final future = http.post(
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
@@ -68,7 +72,8 @@ class ProductList with ChangeNotifier {
         },
       ),
     ); // cria uma coleção products no realtimedatabase e adiciona o produto (sem o id)
-    future.then((response) {
+   return future.then<void>((response) {
+     //adicionando o generics void é como se tivesse colocado outro then quando esse then termina
       final id = jsonDecode(response.body)['name'];
       _items.add(Product(
           id: id,
@@ -76,10 +81,10 @@ class ProductList with ChangeNotifier {
           description: product.description,
           price: product.price,
           imageUrl: product
-              .imageUrl)); //recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
+              .imageUrl));
+      notifyListeners();//recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
     });
-    _items.add(product);
-    notifyListeners();
+
   }
 }
 
