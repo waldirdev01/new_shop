@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:new_shop/models/product.dart';
 
 import '../data/dummy_data.dart';
 
 class ProductList with ChangeNotifier {
+  final _baseUrl = 'https://newshopp-46acb-default-rtdb.firebaseio.com';
   List<Product> _items = dummyProducts;
 
   List<Product> get items => [..._items];
@@ -52,6 +54,18 @@ class ProductList with ChangeNotifier {
       _items.where((prod) => prod.isFavorite).toList();
 
   void addProduct(Product product) {
+    http.post(
+      Uri.parse('$_baseUrl/products.json'),
+      body: jsonEncode(
+        {
+          "name": product.name,
+          "description": product.description,
+          "price": product.price,
+          "imageUrl": product.imageUrl,
+          "isFavorite": product.isFavorite,
+        },
+      ),
+    ); // cria uma coleção products no realtimedatabase e adiciona o produto
     _items.add(product);
     notifyListeners();
   }
