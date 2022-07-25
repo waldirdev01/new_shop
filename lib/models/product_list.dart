@@ -33,6 +33,7 @@ class ProductList with ChangeNotifier {
       addProduct(product);
     }
   }
+
   void updateProduct(Product product) {
     int index = _items.indexWhere((p) => p.id == product.id);
 
@@ -41,6 +42,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
     }
   }
+
   void removeProduct(Product product) {
     int index = _items.indexWhere((p) => p.id == product.id);
 
@@ -54,7 +56,7 @@ class ProductList with ChangeNotifier {
       _items.where((prod) => prod.isFavorite).toList();
 
   void addProduct(Product product) {
-    http.post(
+    final future = http.post(
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
         {
@@ -65,7 +67,17 @@ class ProductList with ChangeNotifier {
           "isFavorite": product.isFavorite,
         },
       ),
-    ); // cria uma coleção products no realtimedatabase e adiciona o produto
+    ); // cria uma coleção products no realtimedatabase e adiciona o produto (sem o id)
+    future.then((response) {
+      final id = jsonDecode(response.body)['name'];
+      _items.add(Product(
+          id: id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          imageUrl: product
+              .imageUrl)); //recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
+    });
     _items.add(product);
     notifyListeners();
   }
