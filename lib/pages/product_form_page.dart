@@ -71,7 +71,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return isValidUrl && endsWithFile;
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -79,17 +79,18 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     _formKey.currentState?.save();
-    setState(() {
-      //enquanto não chegar ao provider vai permitir mostra o CircularProgressIndicator
-      _isLoading = true;
-    });
 
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).catchError((error) {
-      //tratando erro de salvamento
-      return showDialog<void>(
+    setState(() => _isLoading = true);
+
+    try {
+      await Provider.of<ProductList>(
+        context,
+        listen: false,
+      ).saveProduct(_formData);
+
+      Navigator.of(context).pop();
+    } catch (error) {
+      await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Ocorreu um erro!'),
@@ -102,13 +103,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
           ],
         ),
       );
-    }).then((value) {
-      //qunado entra aqui, muda o _isLoading e navega
+    } finally {
       setState(() => _isLoading = false);
-      Navigator.of(context).pop();
-    });
-    //essa alteração agora faz com que a navegação só aconteça quando
-    //saveProduct termine lá na product_list
+    }
   }
 
   @override

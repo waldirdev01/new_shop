@@ -58,9 +58,8 @@ class ProductList with ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  Future<void> addProduct(Product product) {
-    //converti para Future<void> para fazer o programa esperar enquanto adciona um produto
-    final future = http.post(
+  Future<void> addProduct(Product product) async {
+    final response = await http.post(
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
         {
@@ -71,18 +70,18 @@ class ProductList with ChangeNotifier {
           "isFavorite": product.isFavorite,
         },
       ),
-    ); // cria uma coleção products no realtimedatabase e adiciona o produto (sem o id)
-    return future.then<void>((response) {
-      //adicionando o generics void é como se tivesse colocado outro then quando esse then termina
-      final id = jsonDecode(response.body)['name'];
-      _items.add(Product(
-          id: id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl));
-      notifyListeners(); //recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
-    });
+    );
+
+    final id = jsonDecode(response.body)['name'];
+    _items.add(Product(
+      id: id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      isFavorite: product.isFavorite,
+    ));
+    notifyListeners();
   }
 }
 
