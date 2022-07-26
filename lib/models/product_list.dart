@@ -82,8 +82,6 @@ class ProductList with ChangeNotifier {
           price: product.price,
           imageUrl: product.imageUrl));
       notifyListeners(); //recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
-    }).catchError((error) {
-      throw error;
     });
   }
 }
