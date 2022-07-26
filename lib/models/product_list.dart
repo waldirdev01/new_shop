@@ -16,10 +16,10 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
- Future<void>saveProduct(Map<String, Object> data) {
+  Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 //converti para Future<void> para poder utilizar o asssinconismo para o programa
-   //esperar enquanto salva ou atualiza um produto
+    //esperar enquanto salva ou atualiza um produto
     final product = Product(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
@@ -31,7 +31,7 @@ class ProductList with ChangeNotifier {
     if (hasId) {
       return updateProduct(product);
     } else {
-     return addProduct(product);
+      return addProduct(product);
     }
   }
 
@@ -72,19 +72,19 @@ class ProductList with ChangeNotifier {
         },
       ),
     ); // cria uma coleção products no realtimedatabase e adiciona o produto (sem o id)
-   return future.then<void>((response) {
-     //adicionando o generics void é como se tivesse colocado outro then quando esse then termina
+    return future.then<void>((response) {
+      //adicionando o generics void é como se tivesse colocado outro then quando esse then termina
       final id = jsonDecode(response.body)['name'];
       _items.add(Product(
           id: id,
           name: product.name,
           description: product.description,
           price: product.price,
-          imageUrl: product
-              .imageUrl));
-      notifyListeners();//recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
+          imageUrl: product.imageUrl));
+      notifyListeners(); //recebe as informações de volta do RTDB e cria um produto com o id que veio do RTDB
+    }).catchError((error) {
+      throw error;
     });
-
   }
 }
 
