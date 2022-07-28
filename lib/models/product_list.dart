@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:new_shop/exceptions/http_exception.dart';
 import 'package:new_shop/models/product.dart';
+import 'package:new_shop/utils/constants.dart';
 
 import '../data/dummy_data.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl =
-      'https://newshopp-46acb-default-rtdb.firebaseio.com/products';
+  final _baseUrl = Constants.PRODUCT_BASE_URL;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
